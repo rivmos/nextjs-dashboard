@@ -15,7 +15,7 @@ export async function fetchRevenue() {
     // Don't do this in production :)
 
     // console.log('Fetching revenue data...');
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     const data = await sql<Revenue>`SELECT * FROM revenue`;
 
@@ -214,4 +214,18 @@ export async function fetchFilteredCustomers(query: string) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch customer table.');
   }
+}
+
+export const fetchDashboardStats = async () => {
+  try {
+  const revenueCount = await sql<Revenue>`SELECT COUNT(*) FROM revenue`;
+  const invoicesCount = await sql<InvoicesTable>`SELECT COUNT(*) FROM invoices`;
+
+  // console.log('Data fetch completed after 3 seconds.');
+
+  return {revenues: revenueCount.rows, invoices: invoicesCount.rows};
+} catch (error) {
+  console.error('Database Error:', error);
+  throw new Error('Failed to fetch revenue data.');
+}
 }
